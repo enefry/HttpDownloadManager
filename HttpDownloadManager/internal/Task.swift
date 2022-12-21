@@ -1,0 +1,15 @@
+//
+//  File.swift
+//
+//
+//  Created by 陈任伟 on 2022/12/19.
+//
+
+import Foundation
+import Tiercel
+
+extension DownloadTask: Task {
+    public var taskStatus: TaskStatus {
+        return TaskStatus(rawValue: status.rawValue)!
+    }
+}
