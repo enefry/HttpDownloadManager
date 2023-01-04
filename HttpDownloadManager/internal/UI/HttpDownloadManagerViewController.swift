@@ -201,6 +201,7 @@ class HttpDownloadManagerViewController: UIViewController, DownloadManagerViewCo
             }
             snapsnot.appendItems(downloads, toSection: .downloading)
             snapsnot.appendItems(completed, toSection: .completed)
+            snapsnot.reloadSections([.completed, .downloading])
             dataSources.apply(snapsnot)
         }
     }

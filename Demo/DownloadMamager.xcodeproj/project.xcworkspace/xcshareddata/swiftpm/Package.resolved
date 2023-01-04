@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "fileuikit",
+      "kind" : "remoteSourceControl",
+      "location" : "git@github.com:enefry/FileUIKit.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "d641d9a4edc19156e2d6d82a2f4226afc2b7cf88"
+      }
+    },
+    {
       "identity" : "loggerproxy",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/enefry/LoggerProxy.git",
@@ -32,7 +41,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/OlehKulykov/PLzmaSDK.git",
       "state" : {
-        "revision" : "33e12346404f022d64be2641a8dced41ad7736bf",
+        "revision" : "3305f8807d1bc679ab8a4930f4bb46ceb1120ed3",
         "version" : "1.2.5"
       }
     },
