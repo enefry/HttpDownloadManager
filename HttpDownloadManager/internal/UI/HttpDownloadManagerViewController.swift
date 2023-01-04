@@ -13,7 +13,11 @@ import UIKit
 
 fileprivate let LOGTAG = { (String(#file) as NSString).lastPathComponent }()
 
-class HttpDownloadManagerViewController: UIViewController, DownloadManagerViewControllerProtocol {
+class HttpDownloadManagerViewController: UIViewController, DownloadManagerViewControllerProtocol, DownloadList {
+    var downloadApi: DownloadManagerApi!
+
+    var swipeActionsBuilder: ((Task) -> [(UIContextualAction.Style, String, (UIViewController & DownloadList, Task) -> Void)])?
+
     var showInformation: Bool = true {
         didSet {
             if isViewLoaded {
@@ -262,30 +266,34 @@ class HttpDownloadManagerViewController: UIViewController, DownloadManagerViewCo
             }
         }
         configure.leadingSwipeActionsConfigurationProvider = { [weak self] indexPath in
-            var actions: [(String, (HttpDownloadManagerViewController, Task) -> Void)] = []
+            var actions: [(UIContextualAction.Style, String, (UIViewController & DownloadList, Task) -> Void)] = []
             if let self = self,
                let item = self.dataSources.itemIdentifier(for: indexPath) {
-                let resume: (HttpDownloadManagerViewController, Task) -> Void = { vc, task in
-                    vc.session?.resume(task: task)
+                let resume: (UIViewController & DownloadList, Task) -> Void = { vc, task in
+                    vc.downloadApi.resume(task: task)
                 }
-                let pause: (HttpDownloadManagerViewController, Task) -> Void = { vc, task in
-                    vc.session?.pause(task: task)
+                let pause: (UIViewController & DownloadList, Task) -> Void = { vc, task in
+                    vc.downloadApi.pause(task: task)
                 }
                 switch item {
                 case let .task(identifier):
                     switch identifier.status {
                     case .running:
-                        actions.append(("暂停", pause))
+                        actions.append((UIContextualAction.Style.normal, "暂停", pause))
                     case .suspended:
-                        actions.append(("恢复", resume))
+                        actions.append((UIContextualAction.Style.normal, "恢复", resume))
                     case .canceled, .failed:
-                        actions.append(("重试", resume))
+                        actions.append((UIContextualAction.Style.normal, "重试", resume))
                     case .waiting, .removed, .willSuspend, .willCancel, .willRemove, .succeeded:
                         break
                     }
+                    if let builder = self.swipeActionsBuilder {
+                        let extActs = builder(identifier.task)
+                        actions.append(contentsOf: extActs)
+                    }
                     if actions.count > 0 {
-                        return UISwipeActionsConfiguration(actions: actions.map({ title, action in
-                            UIContextualAction(style: .normal, title: title) { [action, weak self, identifier] _, _, completion in
+                        return UISwipeActionsConfiguration(actions: actions.map({ style, title, action in
+                            UIContextualAction(style: style, title: title) { [action, weak self, identifier] _, _, completion in
                                 if let self = self {
                                     action(self, identifier.task)
                                 }

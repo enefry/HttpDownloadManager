@@ -12,8 +12,6 @@ import Tiercel
 import UIKit
 
 class HttpDownloadManagerImpl: DownloadManagerApi {
-
-
     func getWorkingPath() -> String {
         session.cache.downloadPath
     }
@@ -84,9 +82,10 @@ class HttpDownloadManagerImpl: DownloadManagerApi {
         }
     }
 
-    func createViewController() -> UIViewController {
+    func createViewController() -> UIViewController & DownloadList {
         let mgr = HttpDownloadManagerViewController()
         mgr.session = self
+        mgr.downloadApi = self
         return mgr
     }
 

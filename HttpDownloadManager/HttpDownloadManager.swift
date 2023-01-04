@@ -103,6 +103,11 @@ public enum Event {
     case allTaskRemoved
 }
 
+public protocol DownloadList {
+    var swipeActionsBuilder: ((_ task: Task) -> [(UIContextualAction.Style, String, (UIViewController & DownloadList, Task) -> Void)])? { get set }
+    var downloadApi: DownloadManagerApi! { get }
+}
+
 public protocol DownloadManagerApi {
     // 事件订阅
     var eventPublisher: PassthroughSubject<Event, Never> { get }
@@ -110,7 +115,7 @@ public protocol DownloadManagerApi {
     // MARK: - UI组件
 
     // 创建一个列表控制器
-    func createViewController() -> UIViewController
+    func createViewController() -> UIViewController & DownloadList
 
     // 创建一个设置配置控制器
     func createSettingsViewController() -> UIViewController
