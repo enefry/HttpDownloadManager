@@ -5,7 +5,8 @@ import PackageDescription
 let package = Package(
   name: "HttpDownloadManager",
   platforms: [
-    .iOS("15")
+    .iOS(.v14),
+    .macCatalyst(.v15)
   ],
   products: [
     .library(name: "HttpDownloadManager", targets: ["HttpDownloadManager"]),
