@@ -30,19 +30,22 @@ class HttpDownloadManagerImpl: DownloadManagerApi {
         return configure
     }
 
-    public static let defaultManager = HttpDownloadManagerImpl(identifier: "HttpDownloadManager.default")
+    public static var defaultWorkingPath: (String?,String?,String?)? = nil
+    public static let defaultManager = {
+        HttpDownloadManagerImpl(identifier: "HttpDownloadManager.default", cachePath: defaultWorkingPath)
+    }()
 
     var eventPublisher = PassthroughSubject<Event, Never>()
     var events: [AnyCancellable] = []
-    public init(identifier: String) {
+    public init(identifier: String, cachePath: (String?,String?,String?)? = nil) {
         let logger = Logger(identifier: identifier)
         self.logger = logger
 
         let configure = Configuration(identifier: identifier)
         configure.load()
         self.configure = configure
-
-        let session = SessionManager(identifier, configuration: configure.toSessionConfigure(), logger: logger)
+        let cache = Tiercel.Cache(identifier, downloadPath: cachePath?.0,downloadTmpPath: cachePath?.1,downloadFilePath: cachePath?.2)
+        let session = SessionManager(identifier, configuration: configure.toSessionConfigure(), logger: logger, cache: cache)
         self.session = session
         // 变换设置
         configure.$timeoutIntervalForRequest.debounce(for: 0.1, scheduler: RunLoop.main).removeDuplicates().sink { [session, weak configure] value in

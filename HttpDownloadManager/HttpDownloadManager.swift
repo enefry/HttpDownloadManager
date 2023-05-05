@@ -187,3 +187,7 @@ public func CreateDownloadManager(identifier: String) -> DownloadManagerApi {
 public func DefaultDownloadManager() -> DownloadManagerApi {
     return HttpDownloadManagerImpl.defaultManager
 }
+
+public func setupDefaultDownloadManagerWorkingPath(path: (String?, String?, String?)? = nil) {
+    HttpDownloadManagerImpl.defaultWorkingPath = path
+}

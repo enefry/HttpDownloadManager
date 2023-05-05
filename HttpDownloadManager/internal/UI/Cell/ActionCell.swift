@@ -63,7 +63,14 @@ class ActionCell: BaseCell {
     var session: HttpDownloadManagerImpl?
 
     private func createButton(title: String? = nil, image: UIImage? = nil, mainColor: UIColor? = nil, sel: Selector) -> UIButton {
-        let tintColor = mainColor ?? UIColor.tintColor
+        let tintColor = mainColor ?? {
+            if #available(iOS 15.0, *) {
+                return UIColor.tintColor
+            } else {
+                return UIColor.link
+            }
+        }()
+
         #if targetEnvironment(macCatalyst)
             let button = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 40))
             button.layer.borderColor = tintColor.cgColor
@@ -73,9 +80,11 @@ class ActionCell: BaseCell {
             button.addConstraint(NSLayoutConstraint(item: button, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 32))
         #else
             let button = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 40))
-            button.configuration = .filled()
-
+            if #available(iOS 15.0, *) {
+                button.configuration = .filled()
+            }
         #endif
+
         button.tintColor = tintColor
         button.translatesAutoresizingMaskIntoConstraints = false
         if title != nil {
