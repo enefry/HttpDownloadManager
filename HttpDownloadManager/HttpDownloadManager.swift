@@ -80,6 +80,7 @@ public enum TaskStatus: String {
     case willRemove
 }
 
+//public typealias Handler<T> = (T) -> ()
 public protocol Task {
     var url: URL { get }
     var taskStatus: TaskStatus { get }
@@ -93,6 +94,7 @@ public protocol Task {
     var speed: Int64 { get }
     var timeRemaining: Int64 { get }
     var error: Error? { get }
+    func completion(completionHandler: @escaping (Task)->Void)  
 }
 
 public enum Event {

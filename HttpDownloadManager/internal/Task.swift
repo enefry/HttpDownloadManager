@@ -9,6 +9,10 @@ import Foundation
 import Tiercel
 
 extension DownloadTask: Task {
+    public func completion(completionHandler: @escaping (Task) -> Void) {
+        self.completion(handler: completionHandler)
+    }
+    
     public var taskStatus: TaskStatus {
         return TaskStatus(rawValue: status.rawValue)!
     }
