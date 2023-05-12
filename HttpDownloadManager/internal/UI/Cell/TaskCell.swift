@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Tiercel
 import UIKit
 
 class DateFormatter {
@@ -82,10 +83,8 @@ class TaskCell: UICollectionViewCell {
         return progress
     }
 
-    func bindTask(_ task: Task) {
-        biningTask = task
+    fileprivate func updateUI(_ task: Task) {
         titleLabel.text = task.fileName
-        progressView.observedProgress = task.progress
         bytesLabel.text = "\(task.progress.completedUnitCount.tr.convertBytesToString())/\(task.progress.totalUnitCount.tr.convertBytesToString())"
         var timeRemainingWidthPriority: UILayoutPriority = .defaultHigh
         timeRemainingLabel.text = "\(DateFormatter.timeRemaining.format(TimeInterval(task.timeRemaining)))"
@@ -130,6 +129,31 @@ class TaskCell: UICollectionViewCell {
         let colors = loadStatusColor(task.taskStatus)
         statusView.backgroundColor = colors.0
         statusLabel.textColor = colors.1
+    }
+
+    func bindTask(_ task: Task) {
+        biningTask = task
+        progressView.observedProgress = task.progress
+        updateUI(task)
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            NotificationCenter.default.addObserver(self, selector: #selector(updateProgress), name: DownloadTask.runningNotification, object: nil)
+        } else {
+            NotificationCenter.default.removeObserver(self)
+        }
+    }
+
+    @objc func updateProgress(_ notification: Notification) {
+        if let task = notification.downloadTask,
+           let biningTask = biningTask,
+           task === biningTask as? AnyObject {
+            DispatchQueue.main.async {
+                self.updateUI(biningTask)
+            }
+        }
     }
 
     func loadStatusColor(_ status: TaskStatus) -> (UIColor, UIColor) {
@@ -244,4 +268,5 @@ class TaskCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
     }
+
 }

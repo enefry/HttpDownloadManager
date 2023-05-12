@@ -116,7 +116,8 @@ class HttpDownloadManagerViewController: UIViewController, DownloadManagerViewCo
         }
         didSet {
             if let session = session {
-                session.eventPublisher.debounce(for: 0.3, scheduler: RunLoop.main).sink(receiveValue: { [weak self] _ in
+                session.eventPublisher.debounce(for: 0.3, scheduler: RunLoop.main).sink(receiveValue: { [weak self] event in
+                    print("update download event; \(event)")
                     self?.updateUI()
                 }).store(in: &sessionObserver)
             }
@@ -205,7 +206,6 @@ class HttpDownloadManagerViewController: UIViewController, DownloadManagerViewCo
             }
             snapsnot.appendItems(downloads, toSection: .downloading)
             snapsnot.appendItems(completed, toSection: .completed)
-            snapsnot.reloadSections([.completed, .downloading])
             dataSources.apply(snapsnot)
         }
     }
