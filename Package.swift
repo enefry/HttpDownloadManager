@@ -12,7 +12,7 @@ let package = Package(
     .library(name: "HttpDownloadManager", targets: ["HttpDownloadManager"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/Danie1s/Tiercel.git", from: "3.2.2"),
+    .package(url: "https://github.com/enefry/Tiercel.git", branch: "master"),
     .package(url: "https://github.com/enefry/LoggerProxy.git", from: "1.0.0"),
   ],
   targets: [

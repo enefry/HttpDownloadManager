@@ -13,12 +13,13 @@
 		9B6D1F91294C0BA900218257 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B6D1F8F294C0BA900218257 /* Main.storyboard */; };
 		9B6D1F93294C0BAB00218257 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B6D1F92294C0BAB00218257 /* Assets.xcassets */; };
 		9B6D1F96294C0BAB00218257 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B6D1F94294C0BAB00218257 /* LaunchScreen.storyboard */; };
-		9B6D1FA1294C0EA100218257 /* HttpDownloadManager in Frameworks */ = {isa = PBXBuildFile; productRef = 9B6D1FA0294C0EA100218257 /* HttpDownloadManager */; };
 		9B6D1FA4294C4E1400218257 /* LookinServer in Frameworks */ = {isa = PBXBuildFile; productRef = 9B6D1FA3294C4E1400218257 /* LookinServer */; };
 		9B6D1FA6294C79CE00218257 /* URLStrings.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9B6D1FA5294C79CE00218257 /* URLStrings.plist */; };
 		FE0493C229520CED003BDF27 /* ColorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0493C129520CED003BDF27 /* ColorVC.swift */; };
 		FE0D29162951B120004B28EB /* FileManagerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE0D29152951B120004B28EB /* FileManagerVC.swift */; };
-		FEDF264F2951B20400237EB2 /* LocalFileManager in Frameworks */ = {isa = PBXBuildFile; productRef = FEDF264E2951B20400237EB2 /* LocalFileManager */; };
+		FE2F9F182A28EFFE005BFA8D /* LocalFileManager in Frameworks */ = {isa = PBXBuildFile; productRef = FE2F9F172A28EFFE005BFA8D /* LocalFileManager */; };
+		FE2F9F1A2A28EFFE005BFA8D /* HttpDownloadManager in Frameworks */ = {isa = PBXBuildFile; productRef = FE2F9F192A28EFFE005BFA8D /* HttpDownloadManager */; };
+		FE2F9F1C2A28EFFE005BFA8D /* Tiercel in Frameworks */ = {isa = PBXBuildFile; productRef = FE2F9F1B2A28EFFE005BFA8D /* Tiercel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,11 +31,12 @@
 		9B6D1F92294C0BAB00218257 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9B6D1F95294C0BAB00218257 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B6D1F97294C0BAB00218257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9B6D1F9E294C0BD400218257 /* HttpDownloadManager */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = HttpDownloadManager; path = ..; sourceTree = "<group>"; };
 		9B6D1FA5294C79CE00218257 /* URLStrings.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = URLStrings.plist; sourceTree = "<group>"; };
 		FE0493C129520CED003BDF27 /* ColorVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorVC.swift; sourceTree = "<group>"; };
-		FE0D29142951B07F004B28EB /* FileUIKitLocalFileManager */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FileUIKitLocalFileManager; path = ../../FileUIKitLocalFileManager; sourceTree = "<group>"; };
 		FE0D29152951B120004B28EB /* FileManagerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerVC.swift; sourceTree = "<group>"; };
+		FE2F9F142A28EF7D005BFA8D /* FileUIKitLocalFileManager */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FileUIKitLocalFileManager; path = ../modules/FileUIKitLocalFileManager; sourceTree = "<group>"; };
+		FE2F9F152A28EF89005BFA8D /* Tiercel */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Tiercel; path = ../modules/Tiercel; sourceTree = "<group>"; };
+		FE2F9F162A28EF98005BFA8D /* HttpDownloadManager */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = HttpDownloadManager; path = ..; sourceTree = "<group>"; };
 		FE7918092951545D0042CC49 /* DownloadMamager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DownloadMamager.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -43,9 +45,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9B6D1FA1294C0EA100218257 /* HttpDownloadManager in Frameworks */,
-				FEDF264F2951B20400237EB2 /* LocalFileManager in Frameworks */,
+				FE2F9F182A28EFFE005BFA8D /* LocalFileManager in Frameworks */,
 				9B6D1FA4294C4E1400218257 /* LookinServer in Frameworks */,
+				FE2F9F1A2A28EFFE005BFA8D /* HttpDownloadManager in Frameworks */,
+				FE2F9F1C2A28EFFE005BFA8D /* Tiercel in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,8 +94,9 @@
 		9B6D1F9D294C0BD400218257 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				9B6D1F9E294C0BD400218257 /* HttpDownloadManager */,
-				FE0D29142951B07F004B28EB /* FileUIKitLocalFileManager */,
+				FE2F9F142A28EF7D005BFA8D /* FileUIKitLocalFileManager */,
+				FE2F9F152A28EF89005BFA8D /* Tiercel */,
+				FE2F9F162A28EF98005BFA8D /* HttpDownloadManager */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -121,9 +125,10 @@
 			);
 			name = DownloadMamager;
 			packageProductDependencies = (
-				9B6D1FA0294C0EA100218257 /* HttpDownloadManager */,
 				9B6D1FA3294C4E1400218257 /* LookinServer */,
-				FEDF264E2951B20400237EB2 /* LocalFileManager */,
+				FE2F9F172A28EFFE005BFA8D /* LocalFileManager */,
+				FE2F9F192A28EFFE005BFA8D /* HttpDownloadManager */,
+				FE2F9F1B2A28EFFE005BFA8D /* Tiercel */,
 			);
 			productName = DownloadMamager;
 			productReference = 9B6D1F86294C0BA900218257 /* DownloadMamager.app */;
@@ -264,7 +269,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -318,7 +323,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -344,7 +349,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -377,7 +382,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -429,18 +434,22 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9B6D1FA0294C0EA100218257 /* HttpDownloadManager */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = HttpDownloadManager;
-		};
 		9B6D1FA3294C4E1400218257 /* LookinServer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9B6D1FA2294C4E1400218257 /* XCRemoteSwiftPackageReference "LookinServer" */;
 			productName = LookinServer;
 		};
-		FEDF264E2951B20400237EB2 /* LocalFileManager */ = {
+		FE2F9F172A28EFFE005BFA8D /* LocalFileManager */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LocalFileManager;
+		};
+		FE2F9F192A28EFFE005BFA8D /* HttpDownloadManager */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HttpDownloadManager;
+		};
+		FE2F9F1B2A28EFFE005BFA8D /* Tiercel */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Tiercel;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

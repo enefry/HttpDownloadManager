@@ -1,0 +1,6 @@
+[submodule "modules/FileUIKitLocalFileManager"]
+	path = modules/FileUIKitLocalFileManager
+	url = https://github.com/enefry/FileUIKitLocalFileManager.git
+[submodule "modules/Tiercel"]
+	path = modules/Tiercel
+	url = https://github.com/enefry/Tiercel.git
