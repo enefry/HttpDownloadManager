@@ -147,9 +147,9 @@ class TaskCell: UICollectionViewCell {
     }
 
     @objc func updateProgress(_ notification: Notification) {
-        if let task = notification.downloadTask,
+        if let task = notification.tr.downloadTask,
            let biningTask = biningTask,
-           task === biningTask as? AnyObject {
+           task === biningTask as AnyObject {
             DispatchQueue.main.async {
                 self.updateUI(biningTask)
             }
