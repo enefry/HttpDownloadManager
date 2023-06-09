@@ -116,7 +116,7 @@ class HttpDownloadManagerViewController: UIViewController, DownloadManagerViewCo
         }
         didSet {
             if let session = session {
-                session.eventPublisher.debounce(for: 0.3, scheduler: RunLoop.main).sink(receiveValue: { [weak self] event in
+                session.eventPublisher.throttle(for: 0.3, scheduler: RunLoop.main, latest: true).sink(receiveValue: { [weak self] event in
                     print("update download event; \(event)")
                     self?.updateUI()
                 }).store(in: &sessionObserver)
