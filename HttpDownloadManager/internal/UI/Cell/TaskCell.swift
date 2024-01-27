@@ -5,6 +5,7 @@
 //  Created by 陈任伟 on 2022/12/16.
 //
 
+import Combine
 import Foundation
 import Tiercel
 import UIKit
@@ -83,9 +84,9 @@ class TaskCell: UICollectionViewCell {
         return progress
     }
 
-    fileprivate func updateUI(_ task: Task) {
-        titleLabel.text = task.fileName
+    fileprivate func updateUI(_ task: Task, progressOnly: Bool = false) {
         bytesLabel.text = "\(task.progress.completedUnitCount.tr.convertBytesToString())/\(task.progress.totalUnitCount.tr.convertBytesToString())"
+
         var timeRemainingWidthPriority: UILayoutPriority = .defaultHigh
         timeRemainingLabel.text = "\(DateFormatter.timeRemaining.format(TimeInterval(task.timeRemaining)))"
         let dateString: String = {
@@ -99,36 +100,44 @@ class TaskCell: UICollectionViewCell {
             }
         }()
         dateLabel.text = dateString
-        speedLabel.text = ""
+        if !progressOnly {
+            titleLabel.text = task.fileName
+        }
 
-        switch task.taskStatus {
-        case .suspended:
-            statusLabel.text = "暂停"
-        case .running:
-            statusLabel.text = "下载中"
+        if !progressOnly || task.taskStatus != lastStatus {
+            switch task.taskStatus {
+            case .suspended:
+                statusLabel.text = "暂停"
+            case .running:
+                statusLabel.text = "下载中"
+            case .succeeded:
+                statusLabel.text = "成功"
+                timeRemainingLabel.text = ""
+                timeRemainingWidthPriority = .defaultLow
+            case .failed:
+                statusLabel.text = "失败"
+                timeRemainingWidthPriority = .defaultLow
+            case .waiting:
+                statusLabel.text = "等待中"
+                timeRemainingWidthPriority = .defaultLow
+            default:
+                break
+            }
+            timeRemainingWidth.priority = timeRemainingWidthPriority
+            let colors = loadStatusColor(task.taskStatus)
+            statusView.backgroundColor = colors.0
+            statusLabel.textColor = colors.1
+            lastStatus = task.taskStatus
+        }
+        if task.taskStatus == .running {
             if task.speed == 0 {
                 speedLabel.text = "- KB/s"
             } else {
                 speedLabel.text = "\(ByteCountFormatter.string(fromByteCount: task.speed, countStyle: .file))/s"
             }
-        case .succeeded:
-            statusLabel.text = "成功"
-            timeRemainingLabel.text = ""
-            timeRemainingWidthPriority = .defaultLow
-        case .failed:
-            statusLabel.text = "失败"
-            timeRemainingWidthPriority = .defaultLow
-        case .waiting:
-            statusLabel.text = "等待中"
-            timeRemainingWidthPriority = .defaultLow
-        default:
-            break
+        } else {
+            speedLabel.text = ""
         }
-
-        timeRemainingWidth.priority = timeRemainingWidthPriority
-        let colors = loadStatusColor(task.taskStatus)
-        statusView.backgroundColor = colors.0
-        statusLabel.textColor = colors.1
     }
 
     func bindTask(_ task: Task) {
@@ -141,7 +150,12 @@ class TaskCell: UICollectionViewCell {
         super.didMoveToWindow()
         if window != nil {
             NotificationCenter.default.addObserver(self, selector: #selector(updateProgress), name: DownloadTask.runningNotification, object: nil)
+            lastNotificationObserver = lastNotification.throttle(for: 3, scheduler: RunLoop.main, latest: true).sink { [weak self] notification in
+//                print("progress:\(not)")
+                self?.throttleUdateProgress(notification)
+            }
         } else {
+            lastNotificationObserver = nil
             NotificationCenter.default.removeObserver(self)
         }
     }
@@ -150,9 +164,15 @@ class TaskCell: UICollectionViewCell {
         if let task = notification.tr.downloadTask,
            let biningTask = biningTask,
            task === biningTask as AnyObject {
-            DispatchQueue.main.async {
-                self.updateUI(biningTask)
-            }
+            lastNotification.send(notification)
+        }
+    }
+
+    @objc func throttleUdateProgress(_ notification: Notification) {
+        if let task = notification.tr.downloadTask,
+           let biningTask = biningTask,
+           task === biningTask as AnyObject {
+            updateUI(task)
         }
     }
 
@@ -163,40 +183,6 @@ class TaskCell: UICollectionViewCell {
         let txtColor = UIColor(named: txtName, in: Bundle.module, compatibleWith: nil)
         return (bgColor ?? UIColor.systemBackground, txtColor ?? UIColor.lightText)
     }
-
-    lazy var titleLabel: UILabel = createLabel()
-    lazy var speedLabel: UILabel = createLabel()
-    lazy var bytesLabel: UILabel = createLabel()
-    lazy var timeRemainingLabel: UILabel = createLabel()
-    lazy var timeRemainingWidth: NSLayoutConstraint = {
-        var layoutConstraint = NSLayoutConstraint(item: timeRemainingLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 100)
-        layoutConstraint.priority = .defaultHigh
-        return layoutConstraint
-    }()
-
-    lazy var dateLabel: UILabel = createLabel()
-    lazy var statusLabel: UILabel = createLabel()
-    lazy var statusView: UIView = {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 32))
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(statusLabel)
-        NSLayoutConstraint.activate([
-            statusLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 4),
-            statusLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 4),
-            view.trailingAnchor.constraint(equalTo: statusLabel.trailingAnchor, constant: 4),
-            view.bottomAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 4),
-            view.widthAnchor.constraint(equalToConstant: 13 * 3 + 5 * 2),
-            view.heightAnchor.constraint(equalToConstant: 13 + 5 * 2),
-        ])
-        view.layer.cornerRadius = 4
-        view.layer.masksToBounds = true
-        return view
-    }()
-
-    lazy var progressView: UIProgressView = createProgress()
-
-    var action: ((Task) -> Void)?
-    var biningTask: Task?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -269,4 +255,39 @@ class TaskCell: UICollectionViewCell {
         super.awakeFromNib()
     }
 
+    lazy var titleLabel: UILabel = createLabel()
+    lazy var speedLabel: UILabel = createLabel()
+    lazy var bytesLabel: UILabel = createLabel()
+    lazy var timeRemainingLabel: UILabel = createLabel()
+    lazy var timeRemainingWidth: NSLayoutConstraint = {
+        var layoutConstraint = NSLayoutConstraint(item: timeRemainingLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 100)
+        layoutConstraint.priority = .defaultHigh
+        return layoutConstraint
+    }()
+
+    lazy var dateLabel: UILabel = createLabel()
+    lazy var statusLabel: UILabel = createLabel()
+    lazy var statusView: UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 32))
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(statusLabel)
+        NSLayoutConstraint.activate([
+            statusLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 4),
+            statusLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 4),
+            view.trailingAnchor.constraint(equalTo: statusLabel.trailingAnchor, constant: 4),
+            view.bottomAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 4),
+            view.widthAnchor.constraint(equalToConstant: 13 * 3 + 5 * 2),
+            view.heightAnchor.constraint(equalToConstant: 13 + 5 * 2),
+        ])
+        view.layer.cornerRadius = 4
+        view.layer.masksToBounds = true
+        return view
+    }()
+
+    lazy var progressView: UIProgressView = createProgress()
+    var lastNotification: PassthroughSubject<Notification, Never> = PassthroughSubject()
+    var lastNotificationObserver: AnyCancellable?
+    var lastStatus: TaskStatus?
+    var action: ((Task) -> Void)?
+    var biningTask: Task?
 }
